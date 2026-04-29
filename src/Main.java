@@ -9,24 +9,40 @@ public class Main {
         Graph tree1 = new Graph(new In(args[0]));
         Graph tree2 = new Graph(new In(args[1]));
 
-        StdOut.println("Arvore 1:");
-        StdOut.println(tree1);
-        StdOut.println();
-
-        StdOut.println("Arvore 2:");
-        StdOut.println(tree2);
-        StdOut.println();
-
         TreeIsomorphism analysis1 = new TreeIsomorphism(tree1);
         TreeIsomorphism analysis2 = new TreeIsomorphism(tree2);
 
-        StdOut.println("TODO: complete a validacao das entradas, o calculo dos centros,");
-        StdOut.println("a codificacao canonica e o veredito final de isomorfismo.");
+        printAnalysis("Arvore 1", args[0], tree1, analysis1);
+        StdOut.println();
+        printAnalysis("Arvore 2", args[1], tree2, analysis2);
+        StdOut.println();
 
-        // Exemplo de chamadas esperadas apos a implementacao:
-        // StdOut.println(analysis1.getValidationMessage());
-        // StdOut.println(analysis2.getValidationMessage());
-        // StdOut.println(analysis1.getCanonicalEncoding());
-        // StdOut.println(analysis2.getCanonicalEncoding());
+        StdOut.println("=== Resultado ===");
+        if (!analysis1.isTree() || !analysis2.isTree()) {
+            StdOut.println("Comparacao encerrada: pelo menos uma das entradas nao e uma arvore valida.");
+            return;
+        }
+        boolean isomorphic = analysis1.getCanonicalEncoding()
+                .equals(analysis2.getCanonicalEncoding());
+        if (isomorphic) {
+            StdOut.println("As arvores SAO isomorfas.");
+        } else {
+            StdOut.println("As arvores NAO sao isomorfas.");
+        }
+    }
+
+    private static void printAnalysis(String titulo, String arquivo, Graph g, TreeIsomorphism a) {
+        StdOut.println("=== " + titulo + " (" + arquivo + ") ===");
+        StdOut.print("Lista de adjacencia:");
+        StdOut.println();
+        StdOut.print(g);
+        if (a.isTree()) {
+            StdOut.println("Valida: true");
+            StdOut.println("Centro(s): " + a.getCenters());
+            StdOut.println("Codificacao canonica: " + a.getCanonicalEncoding());
+        } else {
+            StdOut.println("Valida: false");
+            StdOut.println("Motivo: " + a.getInvalidReason());
+        }
     }
 }
